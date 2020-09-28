@@ -1,0 +1,46 @@
+﻿@page "/waterInTheAir"
+
+<h1>Water in the air</h1>
+<br />
+<p>
+    Temperature in °C:    <input @bind="Temperature" />
+    <br />
+    <br />
+    Rel. humidity in %:  <input @bind="RelativeHumidity" />
+</p>
+<br />
+Vapor pressure in hPa: @VaporPressure
+<br />
+Saturation vapor pressure in hPa: @SaturationVaporPressure
+<br />
+Dew point in °C: @DewPoint
+<br />
+<br />
+<button class="btn btn-primary" @onclick="Calculate">Calculate</button>
+
+@code {
+    private decimal Temperature { get; set; }
+    private decimal RelativeHumidity { get; set; }
+
+    private decimal VaporPressure { get; set; }
+    private decimal SaturationVaporPressure { get; set; }
+    private decimal DewPoint { get; set; }
+
+    private void Calculate()
+    {
+        decimal a = 7.5M;
+        decimal b = 237.3M;
+        if (Temperature < 0)
+        {
+            a = 7.6M;
+            b = 240.7M;
+        }
+
+        SaturationVaporPressure = Convert.ToDecimal(6.1078 * Math.Pow(10, Convert.ToDouble((a * Temperature) / (b + Temperature))));
+
+        VaporPressure = SaturationVaporPressure * Convert.ToDecimal(RelativeHumidity / 100);
+
+        decimal v = Convert.ToDecimal(Math.Log10(Convert.ToDouble(VaporPressure / 6.1078M)));
+        DewPoint = b * v / (a - v);
+    }
+}
