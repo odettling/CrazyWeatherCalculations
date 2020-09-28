@@ -7,7 +7,11 @@
     <br />
     <br />
     Rel. humidity in %: <input @bind="RelativeHumidity" />
+    <br />
+    <br />
+    <button class="btn btn-primary" @onclick="Calculate">Calculate</button>
 </p>
+<br />
 <br />
 <section>
     <h2>Facts</h2>
@@ -22,6 +26,16 @@
         @SaturationVaporPressure
         <br />
         <br />
+        Absolute humidity in g/m³:
+        <br />
+        @AbsoluteHumidity
+        <br />
+        <br />
+        Absolute humidity if saturated in g/m³:
+        <br />
+        @AbsoluteHumiditySaturated
+        <br />
+        <br />
         Dew point in °C:
         <br />
         @DewPointTemperature
@@ -30,14 +44,12 @@
 <section>
     <h2>Presuming an adiabatic atmosphere</h2>
     <p>
-        Height with dew point temperature above ground in m:
+        Dew point temperature in height above ground in m:
         <br />
         @DewPointHeight
     </p>
 </section>
-<br />
-<br />
-<button class="btn btn-primary" @onclick="Calculate">Calculate</button>
+
 
 @code {
     private decimal Temperature { get; set; }
@@ -45,6 +57,8 @@
 
     private decimal VaporPressure { get; set; }
     private decimal SaturationVaporPressure { get; set; }
+    private decimal AbsoluteHumidity { get; set; }
+    private decimal AbsoluteHumiditySaturated { get; set; }
     private decimal DewPointTemperature { get; set; }
 
     private decimal DewPointHeight { get; set; }
@@ -60,8 +74,10 @@
         }
 
         SaturationVaporPressure = Convert.ToDecimal(6.1078 * Math.Pow(10, Convert.ToDouble((a * Temperature) / (b + Temperature))));
-
         VaporPressure = SaturationVaporPressure * Convert.ToDecimal(RelativeHumidity / 100);
+
+        AbsoluteHumidity = Convert.ToDecimal(Math.Pow(10, 5)) * Convert.ToDecimal(18.016M / 8314.3M) * VaporPressure / (Temperature + 273.15M);
+        AbsoluteHumiditySaturated = Convert.ToDecimal(Math.Pow(10, 5)) * Convert.ToDecimal(18.016M / 8314.3M) * SaturationVaporPressure / (Temperature + 273.15M);
 
         decimal v = Convert.ToDecimal(Math.Log10(Convert.ToDouble(VaporPressure / 6.1078M)));
         DewPointTemperature = b * v / (a - v);
