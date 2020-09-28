@@ -3,17 +3,38 @@
 <h1>Water in the air</h1>
 <br />
 <p>
-    Temperature in °C:    <input @bind="Temperature" />
+    Temperature in °C: <input @bind="Temperature" />
     <br />
     <br />
-    Rel. humidity in %:  <input @bind="RelativeHumidity" />
+    Rel. humidity in %: <input @bind="RelativeHumidity" />
 </p>
 <br />
-Vapor pressure in hPa: @VaporPressure
-<br />
-Saturation vapor pressure in hPa: @SaturationVaporPressure
-<br />
-Dew point in °C: @DewPoint
+<section>
+    <h2>Facts:</h2>
+    <p>
+        Vapor pressure in hPa:
+        <br />
+        @VaporPressure
+        <br />
+        <br />
+        Saturation vapor pressure in hPa:
+        <br />
+        @SaturationVaporPressure
+        <br />
+        <br />
+        Dew point in °C:
+        <br />
+        @DewPointTemperature
+    </p>
+</section>
+<section>
+    <h2>Presuming an adiabatic atmosphere:</h2>
+    <p>
+        Height with dew point temperature above ground in m:
+        <br />
+        @DewPointHeight
+    </p>
+</section>
 <br />
 <br />
 <button class="btn btn-primary" @onclick="Calculate">Calculate</button>
@@ -24,7 +45,9 @@ Dew point in °C: @DewPoint
 
     private decimal VaporPressure { get; set; }
     private decimal SaturationVaporPressure { get; set; }
-    private decimal DewPoint { get; set; }
+    private decimal DewPointTemperature { get; set; }
+
+    private decimal DewPointHeight { get; set; }
 
     private void Calculate()
     {
@@ -41,6 +64,8 @@ Dew point in °C: @DewPoint
         VaporPressure = SaturationVaporPressure * Convert.ToDecimal(RelativeHumidity / 100);
 
         decimal v = Convert.ToDecimal(Math.Log10(Convert.ToDouble(VaporPressure / 6.1078M)));
-        DewPoint = b * v / (a - v);
+        DewPointTemperature = b * v / (a - v);
+
+        DewPointHeight = Convert.ToDecimal((Temperature - DewPointTemperature) / 0.65M) * 100;
     }
 }
