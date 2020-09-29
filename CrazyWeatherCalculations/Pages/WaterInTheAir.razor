@@ -16,37 +16,45 @@
 <section>
     <h2>Facts</h2>
     <p>
-        Vapor pressure in hPa:
+        Vapor pressure:
         <br />
-        @VaporPressure
-        <br />
-        <br />
-        Saturation vapor pressure in hPa:
-        <br />
-        @SaturationVaporPressure
+        @VaporPressure hPa
         <br />
         <br />
-        Absolute humidity in g/m³:
+        Saturation vapor pressure:
         <br />
-        @AbsoluteHumidity
-        <br />
-        <br />
-        Absolute humidity if saturated in g/m³:
-        <br />
-        @AbsoluteHumiditySaturated
+        @SaturationVaporPressure hPa
         <br />
         <br />
-        Dew point in °C:
+        Absolute humidity:
         <br />
-        @DewPointTemperature
+        @AbsoluteHumidity g/m³
+        <br />
+        <br />
+        Absolute humidity if saturated:
+        <br />
+        @AbsoluteHumiditySaturated g/m³
+        <br />
+        <br />
+        Dew point:
+        <br />
+        @DewPointTemperature °C
+        <br />
     </p>
 </section>
 <section>
-    <h2>Presuming an adiabatic atmosphere</h2>
+    <h2>Rule of thumb fun-facts</h2>
     <p>
-        Dew point temperature in height above ground in m:
+        Dew point temperature in height above ground:
         <br />
-        @DewPointHeight
+        @DewPointHeight m
+        <br />
+        <br />
+        How large has my flat to be to not getting it wet at this temperature when evaporating 1l of water in it:
+        <br />
+        @DryFlatSquareMeters m²
+        <br />
+        <br />
     </p>
 </section>
 
@@ -62,6 +70,7 @@
     private decimal DewPointTemperature { get; set; }
 
     private decimal DewPointHeight { get; set; }
+    private decimal DryFlatSquareMeters { get; set; }
 
     private void Calculate()
     {
@@ -83,5 +92,6 @@
         DewPointTemperature = b * v / (a - v);
 
         DewPointHeight = Convert.ToDecimal((Temperature - DewPointTemperature) / 0.65M) * 100;
+        DryFlatSquareMeters = 1000 / (AbsoluteHumiditySaturated - AbsoluteHumidity) / 2.4M;
     }
 }
