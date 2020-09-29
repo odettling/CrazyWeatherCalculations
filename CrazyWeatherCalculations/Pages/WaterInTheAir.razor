@@ -18,12 +18,12 @@
     <p>
         Vapor pressure:
         <br />
-        @VaporPressure hPa
+        @VaporPressure mbar
         <br />
         <br />
         Saturation vapor pressure:
         <br />
-        @SaturationVaporPressure hPa
+        @SaturationVaporPressure mbar
         <br />
         <br />
         Absolute humidity:
@@ -39,6 +39,11 @@
         Dew point:
         <br />
         @DewPointTemperature °C
+        <br />
+        <br />
+        Equivalent temperature:
+        <br />
+        @EquivalentTemperature °C
         <br />
     </p>
 </section>
@@ -68,6 +73,7 @@
     private decimal AbsoluteHumidity { get; set; }
     private decimal AbsoluteHumiditySaturated { get; set; }
     private decimal DewPointTemperature { get; set; }
+    private decimal EquivalentTemperature { get; set; }
 
     private decimal DewPointHeight { get; set; }
     private decimal DryFlatSquareMeters { get; set; }
@@ -90,6 +96,8 @@
 
         decimal v = Convert.ToDecimal(Math.Log10(Convert.ToDouble(VaporPressure / 6.1078M)));
         DewPointTemperature = b * v / (a - v);
+
+        EquivalentTemperature = Temperature + (1.53M * VaporPressure);
 
         DewPointHeight = Convert.ToDecimal((Temperature - DewPointTemperature) / 0.65M) * 100;
         DryFlatSquareMeters = 1000 / (AbsoluteHumiditySaturated - AbsoluteHumidity) / 2.4M;
